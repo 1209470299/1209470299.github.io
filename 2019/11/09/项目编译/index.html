@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">archive_a: 2019 | Hexo</title>
+  <title itemprop="name">项目编译 | Hexo</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -313,91 +313,117 @@
   </div>
 </header>
 
-      <div class="blank" style="padding-top: 75px;">
-</div>
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
 <div id="content" class="site-content">
-  <div id="main">
-    <header class="page-header">
-      <h1 class="cat-title">
-      归档</h1>
-      <span class="cat-des">
-        <p>
-        Archives</p>
-      </span>
-    </header>
-    <div id="main-part">
-      <article class="art">
-        <div class="art-main">
-          <div class="art-content">
-            <div id="archives">
-              <p style="text-align:right;">
-                [<span id="al_expand_collapse" style="cursor: s-resize;">
-                全部展开/收缩</span>
-              ]</p>
-              
-              
-              
-              
-              
-                
-                <h3 class="al_year">2019年</h3>
-              
-              
-                
-                <ul class="al_mon_list">
-                  <li class="al_li">
-                    <span class="al_mon" style="cursor: s-resize;">
-                      11月(<span id="post-num">
-                      3</span>
-                    篇文章)</span>
-                    <ul class="al_post_list" style="">
-              
-                      <li>
-                        <a href="/2019/11/09/%E9%A1%B9%E7%9B%AE%E7%BC%96%E8%AF%91/">
-                          <span style="color:#0bf;">
-                          09日02:33:25</span>
-                          项目编译
-                        </a>
-                      </li>
-                      
-              
-              
-              
-              
-              
-                      <li>
-                        <a href="/2019/11/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
-                          <span style="color:#0bf;">
-                          09日02:21:40</span>
-                          设计模式
-                        </a>
-                      </li>
-                      
-              
-              
-              
-              
-              
-                      <li>
-                        <a href="/2019/11/07/hello-world/">
-                          <span style="color:#0bf;">
-                          07日22:08:58</span>
-                          测试博客
-                        </a>
-                      </li>
-                      
-                    </ul>
-                  </li>
-                </ul>
-              
-              
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+          <header class="entry-header">
+            <h1 class="entry-title">项目编译</h1>
+            <p class="entry-census">&nbsp;·&nbsp;2019-11-9&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
+
+            <hr>
+          </header>
+        
+        <div class="entry-content">
+          <h1 id="一-编译手顺"><a href="#一-编译手顺" class="headerlink" title="一 编译手顺"></a>一 编译手顺</h1><p>1 进入LUNUX/Android/</p>
+<p>2 source build/envsetup.sh</p>
+<p>3 lunch    —选择一个特定的类型</p>
+<p>4 make</p>
+<h1 id="二-android编译过程"><a href="#二-android编译过程" class="headerlink" title="二 android编译过程:"></a>二 android编译过程:</h1><p>1 (1)android 会通过AAPT把所有的.xml资源文件编译成R.java二进制格式,当然除了assess,图片和raw目录下的文件.</p>
+<p>  (2)将aidl文件转化为java接口</p>
+<p>2 javac将java文件编译成 class文件</p>
+<p>3 通过dex工具 将class文件\第三方库编译成 dex文件(虚拟机能够识别的就是dex文件)</p>
+<p>4 apkbuilder将dex文件编译成apk文件</p>
+<h1 id="三-makefile文件编写规则"><a href="#三-makefile文件编写规则" class="headerlink" title="三 makefile文件编写规则"></a>三 makefile文件编写规则</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH:= <span class="variable">$(<span class="built_in">call</span> my-<span class="built_in">dir</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(CLEAR_VARS)</span></span><br><span class="line"></span><br><span class="line">LOCAL_SRC_FILES := \</span><br><span class="line">    <span class="variable">$(<span class="built_in">call</span> all-java-files-under, src)</span></span><br><span class="line"></span><br><span class="line">LOCAL_JAVA_LIBRARIES := ts-framework</span><br><span class="line"></span><br><span class="line">LOCAL_SHARED_ANDROID_LIBRARIES := \</span><br><span class="line">    android-support-annotations \</span><br><span class="line"></span><br><span class="line">LOCAL_PACKAGE_NAME := DeviceConnectionManager</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line">LOCAL_CERTIFICATE := platform</span><br><span class="line">LOCAL_PROPRIETARY_MODULE := true</span><br><span class="line">LOCAL_PROGUARD_ENABLED := disabled</span><br><span class="line">LOCAL_MODULE_OWNER := ts</span><br><span class="line">LOCAL_JACK_ENABLED := disabled</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(GEN_PREBUILT_PACKAGE)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(BUILD_PACKAGE)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="variable">$(<span class="built_in">call</span> all-makefiles-under,<span class="variable">$(LOCAL_PATH)</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>LOCAL_PATH :子项目的绝对路径，可以由系统定义的my-dir获取<br>CLEAR_VARS ：清除除了LOCAL_PATH的所有变量值<br>LOCAL_MODULE_TAGS ：子项目的标签。是由系统定义好的,这和编译系统时所选择的产品类型相关。产品的类型有user,eng,debug。而子项目的标签有user,eng,debug,optional。当我们编译的产品类型是user时，就会包含标签是user或者optional的所有子项目。其实无论产品的类型是什么optional标签的子项目都会被包含进去。一般来说user是厂商私有项目的标签，会和厂商的硬件相关联。<br>LOCAL_STATIC_JAVA_LIBRARIES ：该项目所依赖的静态库<br>LOCAL_SRC_FILES ：源文件，java,renderscript可以根据对应的函数获取，如果是.cpp或者.c等就需要指定该源文件的路径。<br>LOCAL_PACKAGE_NAME ：子项目的名称，用于java项目。如果是c/c++则使用LOCAL_MODULE。也是我们make时的target名。<br>LOCAL_CERTIFICATE：签名，我常用的是platform，让项目可享受系统级别的待遇。<br>LOCAL_PRIVILEGED_MODULE ：指明编译后的结果安装的位置，如果不设置或为false,则在out/target/../system/app下，如果为true则安装在out/target/../system/priv-app/。<br>LOCAL_OVERRIDES_PACKAGES ：是某模块不加入编译系统，不会生成对应的输出文件<br>LOCAL_PROGUARD_FLAG_FILES ：指定混淆配置文件，在Android.mk同级目录下创建proguard.flags，指定不被混淆的类。<br>BUILD_PACKAGE ：指明编译结果为apk.这些在config.mk中都有配置</p>
+
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/1209470299/mycdn/img/pay/ali.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/1209470299/mycdnundefined"></li>
+              </ul>
             </div>
           </div>
         </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
       </article>
-    </div>
-  </div>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+        
+          
+            <div class="post-nepre full next">
+          
+            <a href="/2019/11/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                设计模式</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "GyC3NzMvd0hT9Yyd2hYIC0MN-gzGzoHsz",
+        appKey: "mgOpfzbkHYqU92CV4IDlAUHQ",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <a href="" class="profile gravatar"><img src="" itemprop="image" alt="" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="" itemprop="url" rel="author"></a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
+
+
 
     </div>    
     <div class="ins-search">
