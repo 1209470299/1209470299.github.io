@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">测试博客 | Hexo</title>
+  <title itemprop="name">安卓的存储方式 | Hexo</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -328,14 +328,148 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
           <header class="entry-header">
-            <h1 class="entry-title">测试博客</h1>
-            <p class="entry-census">&nbsp;·&nbsp;2019-11-7&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
+            <h1 class="entry-title">安卓的存储方式</h1>
+            <p class="entry-census">&nbsp;·&nbsp;2019-11-9&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
 
             <hr>
           </header>
         
         <div class="entry-content">
-          
+          <h1 id="android存储方式"><a href="#android存储方式" class="headerlink" title="android存储方式"></a>android存储方式</h1><p>Android提供以下四种存储方式：<br>1 SharePreference<br>2 SQLite<br>3 File<br>    内部存储（Internal Storage）。<br>    外部存储（External Storage）。<br>4 ContentProvider<br>5网络存储。</p>
+<h2 id="1-SharePreference"><a href="#1-SharePreference" class="headerlink" title="1 SharePreference"></a>1 SharePreference</h2><h5 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤:"></a>使用步骤:</h5><p>一 .获取Preferences<br>获取 SharedPreferences 对象的方法有两种：</p>
+<p> <strong>SharedPreferences getSharedPreferences(String name, int mode)</strong></p>
+<p>使用该方法获取 name 指定的 SharedPreferences 对象，并获取对该 SharedPreferences 对象的读写控制权。</p>
+<p>当应用程序中可能使用到多个 SharedPreferences 时使用该方法。</p>
+<p><strong>SharedPreferences getPreferences(int mode)</strong></p>
+<p>当应用程序中仅需要一个SharedPreferences对象时，使用该方法获取当前 Activity 对应的 SharedPreferences，而不需要指定 SharedPreferences 的名字。</p>
+<p>其中，参数 mode 有 4 种取值，分别是：<br>MODE_PRIVATE：默认方式，只能被创建的应用程序或者与创建的应用程序具有相同用户 ID 的应用程序访问。<br>MODE_WORLD_READABLE：允许其他应用程序对该 SharedPreferences 文件进行读操作。<br>MODE_WORLD_WRITEABLE：允许其他应用程序对该 SharedPreferences 文件进行写操作。<br>MODE_MULTI_PROCESS：在多进程应用程序中，当多个进程都对同一个 SharedPreferences 进行访问时，该文件的每次修改都会被重新核对。<br>二 .获取 SharedPreferences.Editor<br>调用 edit() 方法获取 SharedPreferences.Editor，SharedPreferences 通过该接口对其内容进行更新。<br>三 . 更新 SharedPreferences<br>通过 SharedPreferences.Editor 接口提供的 put 方法对 SharedPreferences 进行更新。</p>
+<p>例如使用 putBoolean(String key, boolean value)、putFloat(String key, float value) 等方法将相应数据类型的数据与其 key 对应起来。<br>四 . 提交<br>调用 SharedPreferences.Editor 的 commit() 方法将更新提交到 SharedPreferences 中。</p>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>从xml获取数据</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mSharedPreferences.get<span class="constructor">String(<span class="params">string</span> <span class="params">key</span>, <span class="params">string</span> <span class="params">value</span>)</span></span><br></pre></td></tr></table></figure>
+<p>更新xml文件的方法</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">public</span> <span class="type">boolean</span> saveConfigInfo(@NonNull String key, @NonNull String <span class="keyword">value</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (key.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">Log</span>.d(TAG, "saveConfigInfo key is empty.");</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            SharedPreferences.Editor edit = mSharedPreferences.edit();</span><br><span class="line">            edit.putString(key, <span class="keyword">value</span>);</span><br><span class="line">            edit.<span class="keyword">commit</span>();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-SQLite"><a href="#2-SQLite" class="headerlink" title="2 SQLite"></a>2 SQLite</h2><p>1）创建 SQLite 数据库。<br>Android 系统推荐的创建 SQLite 数据库的方法是创建实现 SQLiteOpenHelper 接口的子类，并且重写 onCreate() 方法，在该方法中执行用于创建 SQLite 数据库的命令。<br>2）获取数据库对象<br>通过实现 SQLiteOpenHelper 接口的类的对象，调用 getWritableDatabase() 和 getReadableDatabase() 方法，可以返回所创建数据库的 SQLiteDatabase 对象。<br>3）对数据库进行操作<br>SQLiteDatabase 对象提供了对数据库进行操作的一系列方法，例如 query、insert、delete、update 等，进而对 SQLite 数据库进行读写等操作。<br>4）返回结果<br>对数据库的查询操作会返回一个 Cursor 对象，通过该对象可以从返回的结果中读取出行、列信息。</p>
+<h4 id="SQLite-数据库操作"><a href="#SQLite-数据库操作" class="headerlink" title="SQLite 数据库操作"></a>SQLite 数据库操作</h4><h5 id="1-SQLiteOpenHelper-类"><a href="#1-SQLiteOpenHelper-类" class="headerlink" title="1)SQLiteOpenHelper 类"></a>1)SQLiteOpenHelper 类</h5><p>SQLiteOpenHelper 的子类通过 getReadableDatabase() 和 getWritableDatabase() 方法来获取 SQLiteDatabase 实例对象，并保证以同步方式访问。</p>
+<p>通常情况下，getReadableDatabase() 和 getWritableDatabase() 都是创建或者打开一个可写数据库，并返回相同的对象。</p>
+<p>只有在某些情况下，例如磁盘空间满了，或者数据库只能以只读方式打开的时候，getReadableDatabase() 方法才会以查询方式打开数据库。<br>|方法名称|方法描述|<br>|–|–|<br>|SQLiteOpenHelper ( Context context,String name, CursorFactory factory, int version)|    构造方法，一般是要传递一个要创建的数据库名称<br>|onCreate (SQLiteDatabase db)|    创建数据库时调用<br>|onUpdate ( SQLiteDatabase db,int oldVersion,int new Version)|    版本更新时调用<br>|getReadableDatabase()|    创建或打开一个只读数据库<br>|getWritableDatabase()|    创建或打开一个读写数据库</p>
+<h5 id="2-SQLiteDatabase-类"><a href="#2-SQLiteDatabase-类" class="headerlink" title="2)SQLiteDatabase 类"></a>2)SQLiteDatabase 类</h5><p>SQLiteDatabase 是一个数据库访问类，此类封装了一系列数据库操作的 API，使其可以对数据进行 CRUD 操作，即添加、查询、更新、删除等</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>方法描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>openOrCreateDatabase (Stringpath,SQLiteDatabase.CursorFactory factory)</td>
+<td>打开或创建数据库</td>
+</tr>
+<tr>
+<td>insert (String table,String nullColumnHack,Content Values values)</td>
+<td>添加一条记录</td>
+</tr>
+<tr>
+<td>delete (String table,String whereClause,String[] whereArgs)</td>
+<td>删除一条记录</td>
+</tr>
+<tr>
+<td>query (String table, String[] columns, String selection, String[] selectionArgs, String groupBy,String having,String orderBy)</td>
+<td>查询一条记录</td>
+</tr>
+<tr>
+<td>update (String table,ContentValues values,String whereClause,String[] whereArgs)</td>
+<td>修改记录</td>
+</tr>
+<tr>
+<td>execSQL (String sql)    执行一条SQL语句</td>
+<td></td>
+</tr>
+<tr>
+<td>close()    关闭数据库</td>
+<td></td>
+</tr>
+<tr>
+<td>##### 3）Cursor 接口</td>
+<td></td>
+</tr>
+<tr>
+<td>Cursor 是一个游标接口，在数据库中使用时作为返回值，相当于结果集 ResultSet。它提供了遍历查询结果的方法</td>
+<td></td>
+</tr>
+<tr>
+<td>方法名称</td>
+<td>方法描述</td>
+</tr>
+<tr>
+<td>–</td>
+<td>–</td>
+</tr>
+<tr>
+<td>close()</td>
+<td>关闭游标，释放资源</td>
+</tr>
+<tr>
+<td>copyStringToBuffer(int columnlndex, CharArrayBuffer buffer)</td>
+<td>在缓冲区中检索请求的列的文本，并将其存储</td>
+</tr>
+<tr>
+<td>getColumnCount()</td>
+<td>返回所有列的总数</td>
+</tr>
+<tr>
+<td>getColumnIndex( String columnName)</td>
+<td>返回指定列的名称，如果不存在，就返回-1</td>
+</tr>
+<tr>
+<td>getColumnIndexOrThrow(String columnN ame)</td>
+<td>从零开始返回指定列的名称，如果不存在，将抛出异常</td>
+</tr>
+<tr>
+<td>getColumnName(int columnlndex)</td>
+<td>从给定的索引返回列名</td>
+</tr>
+<tr>
+<td>getColumnNames()</td>
+<td>返回一个字符串数组的列名</td>
+</tr>
+<tr>
+<td>getCount()</td>
+<td>返回Cursor中的行数</td>
+</tr>
+<tr>
+<td>moveToFirst()</td>
+<td>移动光标到第一行</td>
+</tr>
+<tr>
+<td>moveToLast()</td>
+<td>移动光标到最后一行</td>
+</tr>
+<tr>
+<td>moveToNext()</td>
+<td>移动光标到下一行</td>
+</tr>
+<tr>
+<td>moveToPosition(int position)</td>
+<td>移动光标到一个绝对的位置</td>
+</tr>
+<tr>
+<td>moveToPreviousQ</td>
+<td>移动光标到上一行</td>
+</tr>
+</tbody></table>
+<h2 id="3-File"><a href="#3-File" class="headerlink" title="3 File"></a>3 File</h2><p>Android的文件存储方式分为两种：内部存储和外部存储。</p>
+<h3 id="内部存储"><a href="#内部存储" class="headerlink" title="内部存储"></a>内部存储</h3><p>内部存储是指将应用程序的数据以文件方式存储到设备内存中。以内部存储方式存储的文件属于其所创建的应用程序私有，其他应用程序无权进行操作。</p>
+<p>当创建的应用程序被卸载时，其内部存储的文件也随之被删除。当内部存储器的存储空间不足时，缓存文件可能会被删除以释放空间。</p>
+<p>因此，缓存文件是不可靠的。当使用缓存文件时，自己应该维护好缓存文件，并且将缓存文件限制在特定大小之内。</p>
+<p>使用文件存储信息时，使用 openFileOutput 和 openFileInput 进行文件的读写 (java io)<br>1）通过 Context.openFileOutput(String name, int mode) 方法打开文件并设定读写方式，返回 FileOutputStream。<br>其中，参数 mode 取值为：<br>MODE_PRIVATE：默认访问方式，文件仅能被创建应用程序访问。<br>MODE_APPEND：若文件已经存在，则在文件末尾继续写入数据，而不抹掉文件原有内容。<br>MODE_WORLD_READABLE：允许该文件被其他应用程序执行读取内容操作。<br>MODE_WORLD_WRITEABLE：允许该文件被其他应用程序执行写操作。</p>
+<p>1) 调用 FileOutputStream.write() 方法写入数据。<br>2) 调用 FileOutputStream.close() 方法关闭输出流，完成写操作。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">String</span> FILENAME=<span class="string">"hello_file"</span>;</span><br><span class="line"><span class="keyword">String</span> <span class="built_in">string</span>=<span class="string">"hello world"</span>;</span><br><span class="line">FileOutputStream fos = openFileOutput(FILENAME,Context.MODE_PRIVATE);</span><br><span class="line">fos.<span class="built_in">write</span>(<span class="built_in">string</span>.getBytes());</span><br><span class="line">fos.<span class="built_in">close</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="外部存储"><a href="#外部存储" class="headerlink" title="外部存储"></a>外部存储</h3><p>外部存储是指将文件存储到一些外部存储设备上。例如 SD 卡或者设备内嵌的存储卡，属于永久性的存储方式。</p>
+<p>外部存储的文件不被某个应用程序所特有，可以被其他应用程序共享，当将该外部存储设备连接到计算机上时，这些文件可以被浏览、修改和删除。因此，这种存储方式不具有安全性。</p>
+<p>由于外部存储器可能处于被移除、连接到计算机、丢失、只读或者其他各种状态，因此在使用外部存储之前，必须使用 Environment.getExternalStorageState() 方法来确认外部存储器是否可用。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">boolean mExternalStorageAvailable=<span class="literal">false</span>;</span><br><span class="line">boolean mExternalStorageWriteable=<span class="literal">false</span>;</span><br><span class="line">String state = <span class="module-access"><span class="module"><span class="identifier">Environment</span>.</span></span>get<span class="constructor">ExternalStorageState()</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="module-access"><span class="module"><span class="identifier">Environment</span>.</span><span class="module"><span class="identifier">MEDIA_MOUNTED</span>.</span></span>equals(state))&#123;</span><br><span class="line">    <span class="comment">//外部存储器可读写</span></span><br><span class="line">    mExternalStorageAvailable = mExternalStorageWriteable = <span class="literal">true</span>;</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="module-access"><span class="module"><span class="identifier">Environment</span>.</span><span class="module"><span class="identifier">MEDIA_MOUNTED_READ_ONLY</span>.</span></span>equals(state))&#123;</span><br><span class="line">    <span class="comment">//外部存储器可读不可写</span></span><br><span class="line">    mExternalStorageAvailable=<span class="literal">true</span>;</span><br><span class="line">    mExternalStorageWriteable=<span class="literal">false</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">//外部存储器不可读写，处于其他状态</span></span><br><span class="line">    mExternalStorageAvailable = mExternalStorageWriteable = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-ContentProvider"><a href="#4-ContentProvider" class="headerlink" title="4 ContentProvider"></a>4 ContentProvider</h2><h2 id="5网络存储"><a href="#5网络存储" class="headerlink" title="5网络存储"></a>5网络存储</h2>
         </div>
         <!-- .entry-content -->
         <div class="single-reward">
@@ -363,23 +497,23 @@
       <div class="toc" style="background: none;"></div>
       <section class="post-squares nextprev">
         
+        
           
-            <div class="post-nepre full previous">
+            <div class="post-nepre full next">
           
-            <a href="/2019/11/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="prev">
+            <a href="/2019/11/09/%E9%A1%B9%E7%9B%AE%E7%BC%96%E8%AF%91/" rel="next">
               <div class="background">
                 <img class="lazyload" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
               </div>
               <span class="label">
-              Previous Post</span>
+              Next Post</span>
               <div class="info">
                 <h3>
-                设计模式</h3>
+                项目编译</h3>
                 <hr>
               </div>
             </a>
           </div>
-        
         
       </section>
       
