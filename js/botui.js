@@ -69,15 +69,15 @@
                 }).then(function () {
                     botui.message.add({
                         delay: 1500,
-                        content: "向往技术，喜欢上了马克思主义"
+                        content: "专业是计算机科学与技术"
                     }).then(function () {
                         botui.message.add({
                             delay: 1200,
-                            content: "因为Coder也要向共产主义看起嘛"
+                            content: "emmmmmmmmmmmmmmmm"
                         }).then(function () {
                             botui.message.add({
                                 delay: 1500,
-                                content: "主攻 C++ 和 LINUX，略懂 AGL，偶尔也折腾 Android/HTML/CSS/JavaScript/PHP"
+                                content: " "
                             }).then(function () {
                                 botui.message.add({
                                     delay: 1500,
@@ -90,7 +90,7 @@
                                         botui.action.button({
                                             delay: 1100,
                                             action: [{
-                                                text: "为什么你要写博客呢 🤔",
+                                                text: "🤔",
                                                 value: "why-mashiro"
                                             }]
                                         }).then(function (a) {
@@ -106,12 +106,12 @@
             thirdpart = function () {
                 botui.message.add({
                     delay: 1E3,
-                    content: "因为我想记录下我学习的每个步骤"
+                    content: "🤔"
                 }).then(function () {
                     botui.action.button({
                         delay: 1500,
                         action: [{
-                            text: "这么麻烦有什么好处吗 🤔",
+                            text: "那么为什么要写博客呢 🤔",
                             value: "why-cat"
                         }]
                     }).then(function (a) {
@@ -122,16 +122,16 @@
             fourthpart = function () {
                 botui.message.add({
                     delay: 1E3,
-                    content: "在你记录下你学习中的问题，不仅以后可以复习 "
+                    content: "自己经常在网上查看别人的博客资料，深受启发 "
                 }).then(function () {
                     botui.message.add({
                         delay: 1100,
-                        content: "而还可以和其他小伙伴分享你的成果！"
+                        content: "近来回想自己学习过的知识，繁多杂乱，故想通过写博客的形式进行总结整理一下！也可以给需要的朋友提供参考"
                     }).then(function () {
                         botui.action.button({
                             delay: 1500,
                             action: [{
-                                text: "哇，你好棒啊！我们做朋友把！(ง •_•)ง",
+                                text: "我们做朋友把！(ง •_•)ง",
                                 value: "why-domain"
                             }]
                         }).then(function (a) {
@@ -147,7 +147,7 @@
                 }).then(function () {
                     botui.message.add({
                         delay: 1600,
-                        content: "你看看博客就好啦^"
+                        content: "你看看博客就好啦^_^"
                     })
                 })
             } 
